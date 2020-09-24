@@ -4,24 +4,20 @@
 \alias{stats_to_df}
 \title{Function reads in a table of coordinates with a unique ID 'UID' field and
 for each UID open the corresponding output basin statistics txt file from
-'calc_basin_stats' and reads data to data.frame. For each UID, the corresponding
-specified statistic is returned as a data.frame.}
+'calc_basin_stats' and reads data to data.frame.}
 \usage{
-stats_to_df(basin_df, stat_dir, stat)
+stats_to_df(basin_df, stat_dir)
 }
 \arguments{
 \item{basin_df}{A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier feild --labeld UID--.}
 
 \item{stat_dir}{Path to output directory with r.univar statistic txt files from 'calc_basin_stats' as character vector.}
-
-\item{stat}{Statistic to return, one of n, min, mean, max, MAE, stddev, var or sum as string.}
 }
 \value{
-Two column data.frame with UID field and corresponding upstream statistic --stat--.
+Data.frame with UID field and corresponding upstream statistics.
 }
 \description{
 Function reads in a table of coordinates with a unique ID 'UID' field and
 for each UID open the corresponding output basin statistics txt file from
-'calc_basin_stats' and reads data to data.frame. For each UID, the corresponding
-specified statistic is returned as a data.frame.
+'calc_basin_stats' and reads data to data.frame.
 }

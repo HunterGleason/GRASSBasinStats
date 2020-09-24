@@ -4,13 +4,12 @@
 \alias{get_basin_stats}
 \title{Main function. Reads in a table of x-y pour point coordinates with a unique ID 'UID' field and
 delineates upstream basin area for each UID. Using the delineated basins, upstream statistics
-are calculated for a input raster layer and returned as a data.frame with the UID and specified
-statistic. The GRASS r.water.outlet and r.univar functions are used for computation, therefore,
-an initialized GRASS environment with a digital elevation model must be active, as well as the
-layers for which statistics are derived. Note these are wrapper functions that assume that the
-GNU parallel package is available.}
+are calculated for a input raster layer and returned as a data.frame. The GRASS r.water.outlet
+and r.univar functions are used for computation, therefore, an initialized GRASS environment with
+a digital elevation model must be active, as well as the layers for which statistics are derived.
+Note these are wrapper functions that assume that the GNU parallel package is available.}
 \usage{
-get_basin_stats(basin_df, procs, stat_rast, stat)
+get_basin_stats(basin_df, procs, stat_rast)
 }
 \arguments{
 \item{basin_df}{A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier field --labeled UID--.}
@@ -18,18 +17,15 @@ get_basin_stats(basin_df, procs, stat_rast, stat)
 \item{procs}{Number of threads to run in parallel, recommend no more than 90\% of system total.}
 
 \item{stat_rast}{Name of input GRASS raster to calculate basin statistics as string, e.g., 'slope'. Assumed present in GRASS initialized environment.}
-
-\item{stat}{Statistic to return, one of n, min, mean, max, MAE, stddev, var or sum as string.}
 }
 \value{
-Two column data.frame with UID field and corresponding upstream statistic --stat--.
+Data.frame with UID field and corresponding upstream statistics.
 }
 \description{
 Main function. Reads in a table of x-y pour point coordinates with a unique ID 'UID' field and
 delineates upstream basin area for each UID. Using the delineated basins, upstream statistics
-are calculated for a input raster layer and returned as a data.frame with the UID and specified
-statistic. The GRASS r.water.outlet and r.univar functions are used for computation, therefore,
-an initialized GRASS environment with a digital elevation model must be active, as well as the
-layers for which statistics are derived. Note these are wrapper functions that assume that the
-GNU parallel package is available.
+are calculated for a input raster layer and returned as a data.frame. The GRASS r.water.outlet
+and r.univar functions are used for computation, therefore, an initialized GRASS environment with
+a digital elevation model must be active, as well as the layers for which statistics are derived.
+Note these are wrapper functions that assume that the GNU parallel package is available.
 }
