@@ -103,13 +103,19 @@ stats_to_df<-function(basin_df,stat_dir)
     #Get the stats for basin by UID from txt file as data.frame
     stats<-readr::read_lines(paste(stat_dir,'/basin_stats_',basin_df$UID[r],'.txt',sep=""))
     
-    #Get user specified statistic ('stat') from stats data.frame, assumed format.
+    #Get user specified statistic ('stat') from stats data.frame, assumed format. 
     #N
     N<-as.numeric(strsplit(stats[2],"=")[[1]][2])
+    #NULL_CELLS
+    NULL_CELLS<-as.numeric(strsplit(stats[3],"=")[[1]][2])
+    #CELLS
+    CELLS<-as.numeric(strsplit(stats[4],"=")[[1]][2])
     #MIN
     MIN<-as.numeric(strsplit(stats[5],"=")[[1]][2])
     #MAX
     MAX<-as.numeric(strsplit(stats[6],"=")[[1]][2])
+    #RANGE
+    RANGE<-as.numeric(strsplit(stats[7],"=")[[1]][2])
     #MEAN
     MEAN<-as.numeric(strsplit(stats[8],"=")[[1]][2])
     #MAE
@@ -121,16 +127,22 @@ stats_to_df<-function(basin_df,stat_dir)
     #SUM
     SUM<-as.numeric(strsplit(stats[13],"=")[[1]][2])
     
-    stat_vec<-c(basin_df$UID[r],N,MIN,MAX,MEAN,MAE,STDDEV,VAR,SUM)
-    
-    rslt<-rbind(rslt,stat_vec)
+    stat_vec<-c(basin_df$UID[r],N,NULL_CELLS,CELLS,MIN,MAX,RANGE,MEAN,MAE,STDDEV,VAR,SUM)
+
+    if(r==1)
+    {
+    	rslt<-stat_vec
+    }else
+    {
+    	rslt<-rbind(rslt,stat_vec)
+    }
     
   }
   
   #Form a result data.frame with UID and basic statistic as fields
   rslt<-as.data.frame(rslt)
   
-  colnames(rslt)<-c('UID','MIN','MAX','MEAN','MAE','STDDEV','VAR','SUM')
+  colnames(rslt)<-c('UID','N','NULL_CELLS','CELLS','MIN','MAX','RANGE','MEAN','MAE','STDDEV','VAR','SUM')
   
   return(rslt)
   
