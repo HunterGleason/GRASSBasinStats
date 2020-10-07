@@ -128,13 +128,13 @@ stats_to_df<-function(basin_df,stat_dir)
     SUM<-as.numeric(strsplit(stats[13],"=")[[1]][2])
     
     stat_vec<-c(basin_df$UID[r],N,NULL_CELLS,CELLS,MIN,MAX,RANGE,MEAN,MAE,STDDEV,VAR,SUM)
-
+    
     if(r==1)
     {
-    	rslt<-stat_vec
+      rslt<-stat_vec
     }else
     {
-    	rslt<-rbind(rslt,stat_vec)
+      rslt<-rbind(rslt,stat_vec)
     }
     
   }
@@ -160,13 +160,17 @@ stats_to_df<-function(basin_df,stat_dir)
 #'@param stat_rast Name of input GRASS raster to calculate basin statistics as string, e.g., 'slope'. Assumed present in GRASS initialized environment.
 #'@return Data.frame with UID field and corresponding upstream statistics.
 #'@export
-get_basin_stats<-function(basin_df,procs,stat_rast)
+get_basin_stats<-function(basin_df,procs,stat_rast,delin_basins)
 {
   #Delineate basins from DEM for all pour points in basin_df using GRASS r.water.outlet
-  delin_basin(basin_df,procs)
+  
+  if(delin_basins==T)
+  {
+    delin_basin(basin_df,procs)
+  }
   
   #Create temp dir for out basin statistics txt files
-  stat_dir<-paste(tempdir(),"/temp_basin_stats/",sep="")
+  stat_dir<-paste(tempdir(),"/temp_basin_stats_",sample(c(1:10000000),1),"/",sep="")
   system(paste("mkdir ",stat_dir,sep=""))
   
   #Calculate upstream basin statistics for 'stat_rast' for each pour point, write stat txt files to 'stat_dir'
@@ -176,8 +180,8 @@ get_basin_stats<-function(basin_df,procs,stat_rast)
   stat_vec<-stats_to_df(basin_df,stat_dir)
   
   #Clean up temp files
-  rgrass7::execGRASS('g.remove',parameters = list(type='raster',pattern='basin_*'),flags=c('f'))
-  system(paste("rm -r ",stat_dir,sep=""))
+  #rgrass7::execGRASS('g.remove',parameters = list(type='raster',pattern='basin_*'),flags=c('f'))
+  #system(paste("rm -r ",stat_dir,sep=""))
   
   #Return basin stat data.frame
   return(stat_vec)
