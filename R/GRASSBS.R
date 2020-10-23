@@ -2,13 +2,15 @@
 #'delineates upstream basin based on a digital elevation model --assumed to
 #'be present in the initialized GRASS environment--.
 #'
-#'@param basin_df A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier feild --labeld UID--.
+#'@param basin_df A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier field --labeld UID--.
 #'@param procs Number of threads to run in parallel, recommend no more than 90% of system total.
+#'@param grass_Db GRASS GISDBASE directory for the working session
+#'@param grass_loc GRASS location directory for the working session
 #'@return Nothing, however initialized GRASS environment is populated with delineated basins as GRASS raster files.
 #'@export
-delin_basin<-function(basin_df,procs)
+delin_basin<-function(basin_df,procs,grass_Db,grass_loc)
 {
-  #Generate series of GRASS comands based on information in basin_df
+  #Generate series of GRASS commands based on information in basin_df
   cmds<-as.data.frame(paste('r.water.outlet input=dir@PERMANENT coordinates=',basin_df$x,",",basin_df$y,' output=basin_',basin_df$UID,' --overwrite --quiet',sep=""))
   cmd_tbl<-as.data.frame(cmds)
   
@@ -49,9 +51,11 @@ delin_basin<-function(basin_df,procs)
 #'@param stat_rast Name of input GRASS raster to calculate basin statistics as string, e.g., 'slope'. Assumed present in GRASS initialized environment.
 #'@param procs Number of threads to run in parallel, recommend no more than 90% of system total.
 #'@param out_dir Output directory for GARSS r.univar output txt files with basin statistics.
+#'@param grass_Db GRASS GISDBASE directory for the working session
+#'@param grass_loc GRASS location directory for the working session
 #'@return Nothing, however output directory is populated with basin statistics as txt files.
 #'@export
-calc_basin_stats<-function(basin_df,stat_rast,procs,out_dir)
+calc_basin_stats<-function(basin_df,stat_rast,procs,out_dir,grass_Db,grass_loc)
 {
   #Generate series of GRASS commands using information provided in basin_df, save output stats txt files to output directory 'out_dir'
   cmds<-as.data.frame(paste('r.univar -g --overwrite map=',stat_rast,' zones=basin_',basin_df$UID,' output=',out_dir,'/basin_stats_',basin_df$UID,'.txt separator=newline',sep=""))
@@ -158,9 +162,10 @@ stats_to_df<-function(basin_df,stat_dir)
 #'@param basin_df A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier field --labeled UID--.
 #'@param procs Number of threads to run in parallel, recommend no more than 90% of system total.
 #'@param stat_rast Name of input GRASS raster to calculate basin statistics as string, e.g., 'slope'. Assumed present in GRASS initialized environment.
+#'@param clean Boolean, should upstream basin raster be removed from GRASS environment? 
 #'@return Data.frame with UID field and corresponding upstream statistics.
 #'@export
-get_basin_stats<-function(basin_df,procs,stat_rast,delin_basins)
+get_basin_stats<-function(basin_df,procs,stat_rast,delin_basins,clean)
 {
   #Delineate basins from DEM for all pour points in basin_df using GRASS r.water.outlet
   
@@ -180,8 +185,10 @@ get_basin_stats<-function(basin_df,procs,stat_rast,delin_basins)
   stat_vec<-stats_to_df(basin_df,stat_dir)
   
   #Clean up temp files
-  #rgrass7::execGRASS('g.remove',parameters = list(type='raster',pattern='basin_*'),flags=c('f'))
-  #system(paste("rm -r ",stat_dir,sep=""))
+  if(clean==T)
+  {
+    rgrass7::execGRASS('g.remove',parameters = list(type='raster',pattern='basin_*'),flags=c('f'))
+  }
   
   #Return basin stat data.frame
   return(stat_vec)
