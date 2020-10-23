@@ -6,12 +6,16 @@
 delineates upstream basin based on a digital elevation model --assumed to
 be present in the initialized GRASS environment--.}
 \usage{
-delin_basin(basin_df, procs)
+delin_basin(basin_df, procs, grass_Db, grass_loc)
 }
 \arguments{
-\item{basin_df}{A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier feild --labeld UID--.}
+\item{basin_df}{A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier field --labeld UID--.}
 
 \item{procs}{Number of threads to run in parallel, recommend no more than 90\% of system total.}
+
+\item{grass_Db}{GRASS GISDBASE directory for the working session}
+
+\item{grass_loc}{GRASS location directory for the working session}
 }
 \value{
 Nothing, however initialized GRASS environment is populated with delineated basins as GRASS raster files.

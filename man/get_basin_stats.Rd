@@ -9,7 +9,7 @@ and r.univar functions are used for computation, therefore, an initialized GRASS
 a digital elevation model must be active, as well as the layers for which statistics are derived.
 Note these are wrapper functions that assume that the GNU parallel package is available.}
 \usage{
-get_basin_stats(basin_df, procs, stat_rast)
+get_basin_stats(basin_df, procs, stat_rast, delin_basins, clean)
 }
 \arguments{
 \item{basin_df}{A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier field --labeled UID--.}
@@ -17,6 +17,8 @@ get_basin_stats(basin_df, procs, stat_rast)
 \item{procs}{Number of threads to run in parallel, recommend no more than 90\% of system total.}
 
 \item{stat_rast}{Name of input GRASS raster to calculate basin statistics as string, e.g., 'slope'. Assumed present in GRASS initialized environment.}
+
+\item{clean}{Boolean, should upstream basin raster be removed from GRASS environment?}
 }
 \value{
 Data.frame with UID field and corresponding upstream statistics.

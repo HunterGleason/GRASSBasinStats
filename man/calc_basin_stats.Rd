@@ -6,7 +6,7 @@
 calculates raster statistics for a input GRASS raster. Statistics are calculated
 using GRASS r.univar and written to the ouput directory as txt files.}
 \usage{
-calc_basin_stats(basin_df, stat_rast, procs, out_dir)
+calc_basin_stats(basin_df, stat_rast, procs, out_dir, grass_Db, grass_loc)
 }
 \arguments{
 \item{basin_df}{A data frame with x-y coordinates --labeled as x & y-- of pour points to delineate and a unique identifier feild --labeld UID--.}
@@ -16,6 +16,10 @@ calc_basin_stats(basin_df, stat_rast, procs, out_dir)
 \item{procs}{Number of threads to run in parallel, recommend no more than 90\% of system total.}
 
 \item{out_dir}{Output directory for GARSS r.univar output txt files with basin statistics.}
+
+\item{grass_Db}{GRASS GISDBASE directory for the working session}
+
+\item{grass_loc}{GRASS location directory for the working session}
 }
 \value{
 Nothing, however output directory is populated with basin statistics as txt files.
